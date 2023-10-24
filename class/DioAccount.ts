@@ -3,6 +3,7 @@ export abstract class DioAccount {
   private readonly accountNumber: number
   private balance: number = 0
   private status: boolean = true
+  private depositHistory: number[] = [];
 
   constructor(name: string, accountNumber: number) {
     this.name = name
@@ -21,25 +22,27 @@ export abstract class DioAccount {
   getStatus = (): boolean => this.status;
 
   deposit = (value: number): number | void => {
-    const historico:number[] = [];
     if (this.validateStatus()) {
       this.balance += value;
-      const salvaHistorico = ():void => {
-        if(historico.length < 3){
-          historico.push(value);
-        }else {
-          historico.shift()
-          historico.push(value);
-        }
-      }
-      salvaHistorico();
+      this.setDepositHistory(value);
       return this.balance
     }
   }
 
-  withdraw = (valor:number): number | void => {
-    if(this.validateStatus()){
-      if(this.getBalance() >= valor){
+  setDepositHistory = (value: number): void => {
+    this.depositHistory.push(value);
+    if (this.depositHistory.length > 3) {
+      this.depositHistory.shift();
+    }
+  }
+
+  getDepositHistory = (): number[] => this.depositHistory;
+
+
+
+  withdraw = (valor: number): number | void => {
+    if (this.validateStatus()) {
+      if (this.getBalance() >= valor) {
         this.balance -= valor;
         return valor
       }

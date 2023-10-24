@@ -6,17 +6,19 @@ export class CompanyAccount extends DioAccount {
     super(name, accountNumber)
   }
 
-  getDepositHistory = ():number[] => {
-    this.deposit.historico
-    return 
-  }
-
   getLoan = (valorDoEmprestimo: number): number | Error => {
     if (this.getStatus()) {
-      this.deposit(valorDoEmprestimo)
-      return this.getBalance()
-    } else {
-      return Error('Conta inválida')
+      const depositHistory: number[] = this.getDepositHistory();
+      if (depositHistory.length <= 3) {
+        const loanValue = depositHistory.reduce((sum, deposit) => sum + deposit, 0)
+        if(loanValue >= valorDoEmprestimo){
+          this.deposit(valorDoEmprestimo);
+          return valorDoEmprestimo
+        }else{
+          return new Error('Empréstimo não foi liberado, tentar valor menor')
+        }
+      }
     }
+    return new Error('Conta inválida')
   }
 }
