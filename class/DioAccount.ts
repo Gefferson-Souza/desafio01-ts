@@ -1,5 +1,5 @@
 export abstract class DioAccount {
-  private name: string
+  private readonly name: string
   private readonly accountNumber: number
   private balance: number = 0
   private status: boolean = true
@@ -8,11 +8,6 @@ export abstract class DioAccount {
   constructor(name: string, accountNumber: number) {
     this.name = name
     this.accountNumber = accountNumber
-  }
-
-  setName = (name: string): string => {
-    this.name = name
-    return 'Nome alterado com sucesso!'
   }
 
   getName = (): string => {
@@ -37,6 +32,8 @@ export abstract class DioAccount {
   }
 
   getDepositHistory = (): number[] => this.depositHistory;
+
+  clearDepositHistory = ():never[] => this.depositHistory = [];
 
 
 
